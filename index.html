@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jornada da Parentalidade | Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #F8FAFC;
+            --text-dark: #1E293B;
+            --text-light: #64748B;
+            --card-bg: #FFFFFF;
+            
+            /* Cores da Jornada */
+            --color-acolher: #FBBF24; /* Amarelo delicado */
+            --color-planejar: #F97316; /* Laranja delicado */
+            --color-cuidar: #3B82F6;   /* Azul delicado */
+            --color-sustentar: #10B981; /* Verde delicado */
+
+            /* Cores das Tags */
+            --tag-human: #E8EDFF;
+            --tag-human-text: #4338CA;
+            --tag-auto: #F1F5F9;
+            --tag-auto-text: #475569;
+            --tag-hr: #FEF2F2;
+            --tag-hr-text: #DC2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Container da Linha do Tempo */
+        .timeline-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Estrutura das Fases */
+        .phase {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 60px;
+            /* Linha fina e delicada conectando tudo */
+            border-left: 2px solid; 
+        }
+
+        .phase#acolher { border-color: var(--color-acolher); }
+        .phase#planejar { border-color: var(--color-planejar); }
+        .phase#cuidar { border-color: var(--color-cuidar); }
+        .phase#sustentar { border-color: var(--color-sustentar); border-image: linear-gradient(to bottom, var(--color-sustentar) 80%, transparent 100%) 1 100%;}
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px; /* Reduzido para aproximar o subtítulo */
+            margin-left: -15px; /* Ajuste para encostar na linha */
+        }
+        
+        /* Estilo do novo Subtítulo */
+        .phase-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            margin-left: 40px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .phase#acolher .phase-title { color: #D97706; } /* Amarelo/Dourado mais escuro pro texto */
+        .phase#planejar .phase-title { color: #C2410C; }
+        .phase#cuidar .phase-title { color: #1D4ED8; }
+        .phase#sustentar .phase-title { color: #047857; }
+
+        .phase-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            position: relative;
+            left: -20px; /* Centraliza na linha */
+            z-index: 2;
+            box-shadow: 0 0 0 6px var(--bg-color);
+        }
+
+        .phase#acolher .phase-icon { background-color: var(--color-acolher); }
+        .phase#planejar .phase-icon { background-color: var(--color-planejar); }
+        .phase#cuidar .phase-icon { background-color: var(--color-cuidar); }
+        .phase#sustentar .phase-icon { background-color: var(--color-sustentar); }
+
+        /* Estilo dos Cards */
+        .card-list {
+            list-style: none;
+            position: relative;
+        }
+
+        .card-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            border: 1px solid rgba(0,0,0,0.02);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            
+            /* Animação inicial oculta */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Classe ativada pelo JavaScript para animação */
+        .card-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Bolinha na linha para cada item */
+        .card-item::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid;
+            left: -48px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .phase#acolher .card-item::before { border-color: var(--color-acolher); }
+        .phase#planejar .card-item::before { border-color: var(--color-planejar); }
+        .phase#cuidar .card-item::before { border-color: var(--color-cuidar); }
+        .phase#sustentar .card-item::before { border-color: var(--color-sustentar); }
+
+        .card-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        /* Ícone de Presente / Kit */
+        .gift-icon {
+            color: #EF4444; /* Vermelho/Rosa presente */
+            font-size: 1.3rem;
+            animation: pulse 2s infinite;
+        }
+
+        .kit-icon {
+            color: #8B5CF6; /* Roxo para o Kit grande */
+            font-size: 1.5rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1); }
+        }
+
+        /* Tags (Áreas/Gatilhos) */
+        .tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.human { background-color: var(--tag-human); color: var(--tag-human-text); }
+        .tag.auto { background-color: var(--tag-auto); color: var(--tag-auto-text); }
+        .tag.hr { background-color: var(--tag-hr); color: var(--tag-hr-text); }
+
+        /* Botão Final */
+        .btn-saude {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background-color: var(--card-bg);
+            color: var(--text-dark);
+            padding: 18px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-saude:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            color: #E11D48; /* Tom avermelhado no hover */
+        }
+
+        .btn-saude i {
+            color: #E11D48;
+            font-size: 1.5rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .card-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .tags {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .btn-saude {
+                font-size: 1rem;
+                padding: 15px 20px;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Jornada da Parentalidade</h1>
+        <p>Acolhendo, planejando, cuidando e sustentando o futuro.</p>
+    </header>
+
+    <main class="timeline-container">
+
+        <div class="phase" id="acolher">
+            <h2 class="phase-title">
+                <div class="phase-icon"><i class="fa-solid fa-heart"></i></div>
+                Tempo de Acolher
+            </h2>
+            <div class="phase-subtitle">Inicia na inscrição e vai até 12 semanas de gestação</div>
+            
+            <ul class="card-list">
+                <li class="card-item" onclick="window.open('https://liviapaula-ux.github.io/keepintouch/', '_blank')" style="cursor: pointer;" title="Clique para acessar">
+                    <div class="card-content">
+                        <i class="fa-solid fa-desktop text-light"></i>
+                        <span class="card-text">Inscrição, keep in touch* e recebimento do site</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                        <span class="card-text">Recebe o primeiro mapeamento de saúde</span>
+                        <i class="fa-solid fa-gift gift-icon" title="Gatilho de Benefício"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-people-arrows"></i>
+                        <span class="card-text">Passa pelo acolhimento social</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <span class="card-text">Preenche o fluxo de isenção de copay</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        <span class="card-text">Recebe ícone de agendamento da mentoria</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-handshake"></i>
+                        <span class="card-text">Realiza primeira mentoria</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span class="card-text">Liderança recebe o primeiro letramento</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-route"></i>
+                        <span class="card-text">Pais realizam a trilha 1 para pais</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+
+                <li class="card-item" style="border-left: 4px solid #8B5CF6;">
+                    <div class="card-content">
+                        <i class="fa-solid fa-box-open kit-icon"></i>
+                        <span class="card-text">Entrega do Kit Mamãe</span>
+                    </div>
+                    <div class="tags"><span class="tag hr">Gatilho RH</span></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="phase" id="planejar">
+            <h2 class="phase-title">
+                <div class="phase-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                Tempo de Planejar
+            </h2>
+            <ul class="card-list">
+                <li class="card-item" style="border-left: 4px solid #8B5CF6;">
+                    <div class="card-content">
+                        <i class="fa-solid fa-box-open kit-icon"></i>
+                        <span class="card-text">Kit Bebê</span>
+                    </div>
+                    <div class="tags"><span class="tag hr">Gatilho RH</span></div>
+                </li>
+
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-user-group"></i>
+                        <span class="card-text">Sessões mentoria preparo licença (1) e (2)</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        <span class="card-text">Novo mapeamento de saúde</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-phone-volume"></i>
+                        <span class="card-text">Contato recorrente da assistência social</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-person-pregnant"></i>
+                        <span class="card-text">Preparação para parto e saídas de licença</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span class="card-text">Letramento liderança 2</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-users"></i>
+                        <span class="card-text">Roda de conversa para pais</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="phase" id="cuidar">
+            <h2 class="phase-title">
+                <div class="phase-icon"><i class="fa-solid fa-hands-holding-child"></i></div>
+                Tempo de Cuidar
+            </h2>
+            <ul class="card-list">
+                <li class="card-item" style="border-left: 4px solid #8B5CF6;">
+                    <div class="card-content">
+                        <i class="fa-solid fa-box-open kit-icon"></i>
+                        <span class="card-text">Kit Zurich</span>
+                    </div>
+                    <div class="tags"><span class="tag hr">Gatilho RH</span></div>
+                </li>
+
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span class="card-text">1 ou 2 sessões adicionais de mentoria</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-user-nurse"></i>
+                        <span class="card-text">Orientações da enfermagem/saúde</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-id-card"></i>
+                        <span class="card-text">Inclusão do bebê no plano de saúde</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <span class="card-text">Isenção de copay criança até 2 anos (formulário)</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-door-open"></i>
+                        <span class="card-text">Acolhimento no retorno mães</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-handshake-angle"></i>
+                        <span class="card-text">Apoio licença pais / agendamento licença</span>
+                        <i class="fa-solid fa-gift gift-icon"></i>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <span class="card-text">Letramento liderança 2</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="phase" id="sustentar">
+            <h2 class="phase-title">
+                <div class="phase-icon"><i class="fa-solid fa-leaf"></i></div>
+                Tempo de Sustentar
+            </h2>
+            <ul class="card-list">
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-handshake"></i>
+                        <span class="card-text">Última sessão mentoria</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span class="card-text">Novo mapeamento de saúde</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-house-user"></i>
+                        <span class="card-text">Acompanhamento social</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-regular fa-paper-plane"></i>
+                        <span class="card-text">Mensagem de encerramento</span>
+                    </div>
+                    <div class="tags"><span class="tag auto">Automação</span></div>
+                </li>
+                <li class="card-item">
+                    <div class="card-content">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span class="card-text">Suporte da liderança</span>
+                    </div>
+                    <div class="tags"><span class="tag human">Humano</span></div>
+                </li>
+            </ul>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="file:///C:/Users/livia.paula_ifood/Desktop/jornadasaude.html" class="btn-saude">
+                    <i class="fa-solid fa-notes-medical"></i>
+                    Clique aqui para conhecer o fluxo de saúde
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Anima apenas uma vez
+                    }
+                });
+            }, observerOptions);
+
+            const cards = document.querySelectorAll('.card-item');
+            
+            // Adiciona um pequeno delay progressivo para itens próximos
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${(index % 4) * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
